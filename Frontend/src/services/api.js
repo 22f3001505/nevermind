@@ -8,8 +8,9 @@
 const CLOUD_URL = "https://nevermind-api.onrender.com/api";
 const LOCAL_URL = "http://localhost:8000/api";
 
-// Use cloud URL for production (Android + web), localhost for dev
-const isLocalDev = typeof window !== "undefined" && (window.location?.hostname === "localhost" || window.location?.hostname === "127.0.0.1");
+// Use cloud URL for production (Android + web), localhost for dev only
+const isCapacitor = typeof window !== "undefined" && (window.Capacitor?.isNativePlatform?.() || navigator.userAgent.includes("AndroidApp"));
+const isLocalDev = !isCapacitor && typeof window !== "undefined" && (window.location?.hostname === "localhost" || window.location?.hostname === "127.0.0.1") && window.location?.port === "5173";
 const BASE_URL = import.meta.env.VITE_API_URL || (isLocalDev ? LOCAL_URL : CLOUD_URL);
 const TIMEOUT_MS = 60000; // 60s timeout for Render free-tier cold starts
 
