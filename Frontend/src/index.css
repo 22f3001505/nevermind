@@ -1,0 +1,159 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  /* Safe area support for Android notch/cutout */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+body {
+  background-color: #000000;
+  color: #FFFFFF;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  /* Prevent overscroll bounce on Android */
+  overscroll-behavior: none;
+}
+
+/* Scrollbar — Near invisible */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1F1F23;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2A2A2E;
+}
+
+/* Selection — Quiet */
+::selection {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+
+/* Mobile base: smaller text, tighter spacing */
+@media (max-width: 640px) {
+  /* Hero heading scales down */
+  h1 {
+    font-size: 32px !important;
+    line-height: 1.15 !important;
+  }
+
+  /* Nav gets compact */
+  nav .text-lg {
+    font-size: 15px !important;
+  }
+
+  /* Stats row wraps to 2x2 grid */
+  .flex.gap-12 {
+    gap: 1.5rem !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* Quiz option buttons get larger touch targets */
+  button[class*="rounded-[14px]"] {
+    min-height: 56px !important;
+  }
+
+  /* Larger touch targets for all interactive elements */
+  button, a {
+    min-height: 44px;
+  }
+
+  /* Section padding tighter */
+  section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Quiz question text */
+  .text-\[28px\] {
+    font-size: 22px !important;
+  }
+
+  /* Footer */
+  footer p {
+    font-size: 10px !important;
+  }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  h1 {
+    font-size: 40px !important;
+  }
+}
+
+/* ===== APP-SPECIFIC MOBILE STYLES ===== */
+
+/* Capacitor-specific: hide scrollbar on Android WebView */
+.capacitor-android ::-webkit-scrollbar {
+  display: none;
+}
+
+/* Splash/Loading animation */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.loading-pulse {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spin-slow 1.5s linear infinite;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  * {
+    color: #1a1a1a !important;
+    border-color: #ddd !important;
+  }
+}

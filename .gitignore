@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+db.sqlite3
+*.pkl
+
+# Node
+node_modules/
+dist/
+.DS_Store
+
+# Android
+Frontend/android/.gradle/
+Frontend/android/app/build/
+Frontend/android/build/
+Frontend/android/capacitor-cordova-android-plugins/build/
+Frontend/android/nevermind-release.keystore
+*.apk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Screenshots (optional)
+screenshots_*.png
