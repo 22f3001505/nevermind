@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { fetchRoadmap } from "../../services/api";
 import Timeline from "../roadmap/Timeline";
 
 const RoadmapPage = () => {
-  const { careerName } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Extract career name from path: /roadmap/UI%2FUX%20Designer → "UI/UX Designer"
+  const rawPath = location.pathname.replace(/^\/roadmap\//, '');
+  const decodedName = decodeURIComponent(rawPath);
+
   useEffect(() => {
-    fetchRoadmap(decodeURIComponent(careerName))
+    fetchRoadmap(decodedName)
       .then((data) => {
         setRoadmap(data);
         setLoading(false);
@@ -21,7 +25,7 @@ const RoadmapPage = () => {
         setError(err.message);
         setLoading(false);
       });
-  }, [careerName]);
+  }, [decodedName]);
 
   if (loading) {
     return (
@@ -76,7 +80,7 @@ const RoadmapPage = () => {
           className="mb-6 sm:mb-10"
         >
           <h1 className="text-[22px] sm:text-[28px] font-semibold tracking-tight mb-2 sm:mb-3">
-            {decodeURIComponent(careerName)}
+            {decodedName}
           </h1>
           <p className="text-muted text-xs sm:text-sm leading-relaxed">{roadmap.description}</p>
         </motion.div>
