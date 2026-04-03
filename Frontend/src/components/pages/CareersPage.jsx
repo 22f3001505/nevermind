@@ -80,7 +80,7 @@ const CareersPage = () => {
           {filtered.map((career, idx) => (
             <motion.div key={career.name} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.03, duration: 0.25 }}>
               <button
-                onClick={() => navigate(`/roadmap/${encodeURIComponent(career.name)}`)}
+                onClick={() => navigate(`/roadmap/${career.name.replace(/\s*\/\s*/g, '--').replace(/\s+/g, '-')}`)}
                 className="w-full text-left p-3.5 sm:p-4 rounded-[12px] sm:rounded-[14px] bg-surface border border-border hover:border-muted active:scale-[0.99] transition-all duration-200 group"
               >
                 <div className="flex items-start sm:items-center justify-between gap-2">

@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { fetchRoadmap } from "../../services/api";
 import Timeline from "../roadmap/Timeline";
 
 const RoadmapPage = () => {
-  const location = useLocation();
+  const { careerName } = useParams();
   const navigate = useNavigate();
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Extract career name from path: /roadmap/UI%2FUX%20Designer → "UI/UX Designer"
-  const rawPath = location.pathname.replace(/^\/roadmap\//, '');
-  const decodedName = decodeURIComponent(rawPath);
+  // Decode slug for display: "UI--UX-Designer" → "UI/UX Designer"
+  const decodedName = decodeURIComponent(careerName)
+    .replace(/--/g, ' / ')
+    .replace(/-/g, ' ');
 
   useEffect(() => {
-    fetchRoadmap(decodedName)
+    // Send the slug (with dashes) to API — NOT the decoded name with slashes
+    // Backend fuzzy match handles "UI  UX Designer" → "UI/UX Designer"
+    fetchRoadmap(careerName)
       .then((data) => {
         setRoadmap(data);
         setLoading(false);
@@ -25,7 +28,7 @@ const RoadmapPage = () => {
         setError(err.message);
         setLoading(false);
       });
-  }, [decodedName]);
+  }, [careerName]);
 
   if (loading) {
     return (

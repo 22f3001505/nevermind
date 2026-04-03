@@ -204,21 +204,48 @@ class CareersListView(APIView):
 class CareerRoadmapView(APIView):
     """GET /api/careers/<career_name>/roadmap/ — Get detailed roadmap."""
 
+    def _normalize(self, name):
+        """Normalize career name for matching: 'UI-UX Designer' → 'ui/ux designer'"""
+        import re
+        n = name.replace("-", " ").replace("_", " ").strip().lower()
+        # "ui ux" → "ui/ux", "qa  test" → "qa / test"
+        return n
+
+    def _fuzzy_match(self, input_name, career_name):
+        """Check if input matches career, handling slash variations."""
+        import re
+        # Normalize both: remove spaces around /, lowercase
+        def norm(s):
+            s = s.lower().strip()
+            s = re.sub(r'\s*/\s*', '/', s)  # "UI / UX" → "UI/UX"
+            s = re.sub(r'\s+', ' ', s)
+            return s
+        # Also try without slash: "UI UX" should match "UI/UX"
+        input_norm = norm(input_name)
+        career_norm = norm(career_name)
+        if input_norm == career_norm:
+            return True
+        # Try replacing spaces with slash: "UI UX" → "UI/UX"
+        input_slash = re.sub(r'(\w)\s+(\w)', r'\1/\2', input_norm)
+        if input_slash == career_norm:
+            return True
+        return False
+
     def get(self, request, career_name):
         try:
-            career_name = career_name.replace("-", " ").replace("_", " ")
-            roadmap = get_roadmap(career_name)
+            career_name_clean = career_name.replace("-", " ").replace("_", " ")
+            roadmap = get_roadmap(career_name_clean)
 
             if not roadmap:
                 all_careers = get_all_careers()
                 for career in all_careers:
-                    if career["name"].lower() == career_name.lower():
+                    if self._fuzzy_match(career_name_clean, career["name"]):
                         roadmap = get_roadmap(career["name"])
                         break
 
             if not roadmap:
                 return Response(
-                    {"error": f"Career '{career_name}' not found"},
+                    {"error": f"Career '{career_name_clean}' not found"},
                     status=status.HTTP_404_NOT_FOUND
                 )
 

@@ -15,7 +15,7 @@ function App() {
         <Route path="/quiz" element={<QuizPage />} />
         <Route path="/results" element={<ResultPage />} />
         <Route path="/careers" element={<CareersPage />} />
-        <Route path="/roadmap/*" element={<RoadmapPage />} />
+        <Route path="/roadmap/:careerName" element={<RoadmapPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route
           path="*"
