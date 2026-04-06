@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { checkHealth, fetchStats } from "../../services/api";
+import { useAuth } from "../../context/AuthContext";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { user, isLoggedIn, logout } = useAuth();
   const [health, setHealth] = useState(null);
   const [stats, setStats] = useState(null);
   const [waking, setWaking] = useState(false);
@@ -46,6 +48,14 @@ const Home = () => {
           <div className="flex items-center gap-3 sm:gap-6">
             <button onClick={() => navigate("/history")} className="text-muted text-xs sm:text-sm hover:text-text transition-colors duration-200">History</button>
             <button onClick={() => navigate("/careers")} className="text-muted text-xs sm:text-sm hover:text-text transition-colors duration-200">Careers</button>
+            {isLoggedIn ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted hidden sm:inline">{user?.username}</span>
+                <button onClick={logout} className="text-muted text-xs sm:text-sm hover:text-red-400 transition-colors duration-200">Logout</button>
+              </div>
+            ) : (
+              <button onClick={() => navigate("/auth")} className="text-muted text-xs sm:text-sm hover:text-text transition-colors duration-200">Login</button>
+            )}
             <button onClick={() => navigate("/quiz")} className="bg-text text-bg px-3 sm:px-5 py-2 rounded-[10px] text-xs sm:text-sm font-medium hover:scale-[1.02] transition-transform duration-200">Start Quiz</button>
           </div>
         </div>

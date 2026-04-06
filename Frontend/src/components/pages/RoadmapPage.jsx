@@ -136,7 +136,7 @@ const RoadmapPage = () => {
           transition={{ delay: 0.3, duration: 0.3 }}
         >
           <p className="text-xs text-muted uppercase tracking-widest mb-6">Learning roadmap</p>
-          <Timeline roadmap={roadmap.roadmap} />
+          <Timeline roadmap={roadmap.roadmap} careerSlug={careerName} />
         </motion.div>
 
         {/* CTA */}
