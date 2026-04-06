@@ -176,15 +176,6 @@ const AuthPage = () => {
           </div>
         </div>
 
-        {/* Skip */}
-        <div className="text-center mt-4">
-          <button
-            onClick={() => navigate("/")}
-            className="text-muted text-xs hover:text-text transition-colors"
-          >
-            Skip for now →
-          </button>
-        </div>
       </motion.div>
     </div>
   );
