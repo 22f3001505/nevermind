@@ -93,19 +93,34 @@ const RoadmapPage = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.3 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10"
+          className="mb-10"
         >
-          <div className="p-4 rounded-[14px] bg-surface border border-border">
-            <p className="text-muted text-xs mb-1">Salary</p>
-            <p className="text-text font-medium text-sm">{roadmap.avg_salary}</p>
-          </div>
-          <div className="p-4 rounded-[14px] bg-surface border border-border">
-            <p className="text-muted text-xs mb-1">Growth</p>
-            <p className="text-text font-medium text-sm">{roadmap.growth_outlook}</p>
-          </div>
-          <div className="p-4 rounded-[14px] bg-surface border border-border">
-            <p className="text-muted text-xs mb-1">Companies</p>
-            <p className="text-text text-sm">{roadmap.key_companies?.slice(0, 3).join(", ")}</p>
+          {/* Salary by Experience */}
+          {roadmap.salary_inr && (
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="p-3 rounded-[12px] bg-surface border border-border text-center">
+                <p className="text-muted text-[10px] uppercase tracking-wider mb-1">Fresher</p>
+                <p className="text-text font-semibold text-sm">{roadmap.salary_inr.fresher}</p>
+              </div>
+              <div className="p-3 rounded-[12px] bg-surface border border-white/10 text-center">
+                <p className="text-muted text-[10px] uppercase tracking-wider mb-1">Mid-Level</p>
+                <p className="text-text font-semibold text-sm">{roadmap.salary_inr.mid}</p>
+              </div>
+              <div className="p-3 rounded-[12px] bg-surface border border-white/15 text-center">
+                <p className="text-muted text-[10px] uppercase tracking-wider mb-1">Experienced</p>
+                <p className="text-white font-semibold text-sm">{roadmap.salary_inr.experienced}</p>
+              </div>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-3 rounded-[12px] bg-surface border border-border">
+              <p className="text-muted text-xs mb-1">Growth</p>
+              <p className="text-text font-medium text-sm">{roadmap.growth_outlook}</p>
+            </div>
+            <div className="p-3 rounded-[12px] bg-surface border border-border">
+              <p className="text-muted text-xs mb-1">Top Companies</p>
+              <p className="text-text text-sm">{roadmap.key_companies?.slice(0, 3).join(", ")}</p>
+            </div>
           </div>
         </motion.div>
 
