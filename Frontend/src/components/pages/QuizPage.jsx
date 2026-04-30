@@ -122,13 +122,25 @@ const QuizPage = () => {
   }
 
   if (error) {
+    const isSubmitError = questions.length > 0;
     return (
       <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center max-w-md px-6">
           <p className="text-text mb-2 font-medium">Connection Error</p>
-          <p className="text-muted text-sm mb-6">{error}</p>
+          <p className="text-muted text-sm mb-2">{isSubmitError ? "Analysis failed. Please try again." : error}</p>
+          {isSubmitError && (
+            <p className="text-muted/50 text-xs mb-6">The server may be waking up from sleep. Wait 30 seconds, then tap Retry.</p>
+          )}
           <div className="flex gap-3 justify-center">
-            <button onClick={() => { setError(null); setLoading(true); fetchQuestions().then((qs) => { setQuestions(qs); setLoading(false); }).catch((e) => { setError(e.message); setLoading(false); }); }} className="text-text text-sm border border-border px-5 py-2.5 rounded-[10px] hover:border-muted transition-colors duration-200">
+            <button onClick={() => { 
+              setError(null); 
+              if (isSubmitError) {
+                handleSubmit();
+              } else {
+                setLoading(true); 
+                fetchQuestions().then((qs) => { setQuestions(qs); setLoading(false); }).catch((e) => { setError(e.message); setLoading(false); }); 
+              }
+            }} className="text-text text-sm border border-border px-5 py-2.5 rounded-[10px] hover:border-muted transition-colors duration-200">
               Retry
             </button>
             <button onClick={() => navigate("/")} className="text-muted text-sm px-5 py-2.5 rounded-[10px] hover:text-text transition-colors duration-200">

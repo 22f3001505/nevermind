@@ -103,13 +103,44 @@ export const fetchQuestions = async () => {
  * Submit quiz answers and get career prediction + roadmap.
  */
 export const submitQuiz = async (payload) => {
-  return fetchWithRetry(`${BASE_URL}/quiz/submit/`, {
-    method: "POST",
-    body: JSON.stringify({
-      ...payload,
-      session_id: SESSION_ID,
-    }),
-  });
+  // Quiz submit gets extra timeout (90s) and more retries (3) for Render cold starts
+  for (let attempt = 0; attempt <= 3; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90000);
+
+    try {
+      const res = await fetch(`${BASE_URL}/quiz/submit/`, {
+        method: "POST",
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          "X-Session-Id": SESSION_ID,
+        },
+        body: JSON.stringify({
+          ...payload,
+          session_id: SESSION_ID,
+        }),
+      });
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || errBody.detail || `HTTP ${res.status}`);
+      }
+
+      return res.json();
+    } catch (err) {
+      clearTimeout(timeout);
+      if (err.name === "AbortError") {
+        err.message = "Server is waking up. Please wait...";
+      }
+      if (attempt < 3) {
+        await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+        continue;
+      }
+      throw new Error("Analysis failed. The server may be starting up — please wait 30 seconds and tap Retry.");
+    }
+  }
 };
 
 /**
